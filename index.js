@@ -16,7 +16,6 @@ mongodb.connect(config.database, {
   useNewUrlParser: true,
   useUnifiedTopology: true 
 }).then(async () => {
-
   var proxy = httpProxy.createServer({
     proxyTimeout: 30000,
     timeout: 30000

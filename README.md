@@ -21,3 +21,5 @@
 
 `REDIRECT`: The user will be redirected to the URL in `target`
 `WEB`: The user will see the website in `target` (`http://localhost:PORT`)
+
+**Using cloudflare is recommended**
