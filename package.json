@@ -1,0 +1,17 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http": "0.0.1-security",
+    "http-proxy": "^1.18.1",
+    "https": "^1.0.0",
+    "mongoose": "^5.11.18"
+  }
+}
