@@ -1,55 +1,44 @@
-var http = require('http');
-var httpProxy = require('http-proxy');
-const config = require("./config.json")
-const mongodb = require('mongoose');
-mongodb.set('useFindAndModify', false);
+const http = require('http')
+const httpProxy = require('http-proxy')
+const fs = require("fs")
 
-const proxys = mongodb.model("proxies", new mongodb.Schema({
-  uri: String,
-  target: String,
-  type: String,
-  holdPath: Boolean,
-  active: Boolean
-}))
+const proxy = httpProxy.createServer({
+  proxyTimeout: 30000,
+  timeout: 30000
+}).listen(3001)
 
-mongodb.connect(config.database, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true 
-}).then(async () => {
-  var proxy = httpProxy.createServer({
-    proxyTimeout: 30000,
-    timeout: 30000
-  }).listen(3001)
+proxy.on('error', function (err, req, res) {
+  res.writeHead(500, {
+    'Content-Type': 'text/html'
+  })
 
-  http.createServer(async function(req, res) {
-      
-    const target = await proxys.findOne({uri: req.headers.host, active: true})
+  res.end(`Something went wrong.<br><code>${err.message}</code>`)
+})
 
-    if (!target) {
-      res.writeHead(404);
-      return res.end();
-    }
+http.createServer(async function(req, res) {
+  const target = JSON.parse(fs.readFileSync(`${__dirname}/config.json`, "utf-8"))[req.headers.host]
 
-    switch (target.type) {
-      case "WEB":
-        proxy.web(req, res, {
-          target: target.target
-        });
-      break;
+  switch (target?.type) {
+    case "WEB":
+      proxy.web(req, res, {
+        target: `http://localhost:${target.target}`
+      })
+    break
 
-      case "REDIRECT":
-        res.writeHead(302, {
-          'Location': target.holdPath == true ? target.target + req.url : target.target
-        });
-        res.end();
-      break;
-    
-      default:
-        res.writeHead(404);
-        res.end();
-      break;
-    }
+    case "REDIRECT":
+      res.writeHead(302, {
+        'Location': target.keepPath ? target.target + req.url : target.target
+      })
+      res.end()
+    break
 
-
-  }).listen(80, () => { console.log(`${new Date()} | Proxy started`) });
+    default:
+      res.writeHead(404, {
+        'Content-Type': 'text/html'
+      })
+      res.end("Something went wrong.<br><code>Page not found</code>")
+    break
+  }
+}).listen(80, () => {
+  console.log(`${new Date()} | Proxy started`)
 })
