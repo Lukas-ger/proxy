@@ -1,25 +1,25 @@
-# Getting started
+<h1 align="center">P R O X Y</h1>
+Basic proxy script using [http-proxy](https://github.com/http-party/node-http-proxy)
 
-1. Clone this repo
-2. Create a `config.json` with following content:
-```
-{
-    "database": "mongodb+srv://admin:<password>@cluster0.716qv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" 
-}
-```
-3. Replace the URL with your database
-4. Run `node .`
+## Setup
+1. Clone this repository
+2. Adapt the `config.json` to your usage
+3. Run the script. E.g. `cd proxy && pm2 start index.js --name proxy` ([pm2](https://github.com/Unitech/pm2))
 
-# Model
-| Name | Meaning | Example |
-| ------------------ | ------------------ | ------------------ |
-| `uri` | The Domain (+ subdomain) | `www.flamex.dev` |
-| `target` | The target to be redirected to | `https://discord-botlist.eu` |
-| `type` | The type of entry | `REDIRECT` or `WEB` |
-| `holdPath` | `www.flamex.dev/foo/bar` -> `https://discord-botlist.eu/foo/bar` | `true` |
-| `active` | `true` = `on` / `false` = `off` | `true` |
+__Inline command example for Linux__:<br>
+`git clone https://github.com/flamexdev/proxy.git && cd proxy && pm2 start index.js --name proxy`
 
-`REDIRECT`: The user will be redirected to the URL in `target`
-`WEB`: The user will see the website in `target` (`http://localhost:PORT`)
+## Modify records
+Go to `config.json`. There you can see an example for https://flamex.dev.
 
-**Using cloudflare is recommended**
+The key is the used (sub-)domain of the incoming request. 
+There are two different types that you can use: `WEB` and `REDIRECT`:
+- "WEB"
+Shows you the page that is running ont he port, that got specified with `target`
+
+- "REDIRECT"
+Redirects the request to the URL, that got specified with `target`
+
+
+## Any questions left?
+Feel free to open a issue, send me an [E-Mail](mailto:contact@flamex.dev) or a dm on [Discord](https://discord.com/users/681424352599736327)
