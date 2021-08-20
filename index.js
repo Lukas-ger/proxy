@@ -8,13 +8,13 @@ const proxy = httpProxy.createProxyServer({
   ws: true
 }).listen(3001)
 
-// proxy.on('error', function (err, req, res) {
-//   res.writeHead(500, {
-//     'Content-Type': 'text/html'
-//   })
+proxy.on('error', function (err, req, res) {
+  res.writeHead(500, {
+    'Content-Type': 'text/html'
+  })
 
-//   res.end(`Something went wrong.<br><code>${err.message}</code>`)
-// })
+  res.end(`Something went wrong.<br><code>${err.message}</code>`)
+})
 
 http.createServer(async function(req, res, head) {
   const target = JSON.parse(fs.readFileSync(`${__dirname}/config.json`, "utf-8"))[req.headers.host]
