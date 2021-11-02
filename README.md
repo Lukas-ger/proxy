@@ -1,5 +1,5 @@
 <h1 align="center">P R O X Y</h1>
-Basic proxy script using [http-proxy](https://github.com/http-party/node-http-proxy)
+Basic proxy script using <a href="https://github.com/http-party/node-http-proxy">http-proxy</a>
 
 ## Setup
 1. Clone this repository
