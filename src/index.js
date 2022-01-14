@@ -14,37 +14,42 @@ const proxy = httpProxy.createProxyServer({
   ws: true
 }).listen(ports.proxyServer)
 
-proxy.on('error', function (err, req, res) {
+proxy.on('error', (err, req, res) => {
   res.writeHead(500)
   res.end()
 })
 
-http.createServer(async function(req, res, head) {
-  const target = hosts[req.headers.host]
+http.createServer(async (req, res, head) => {
+  if (!hosts[req.headers.host]) {
+    res.writeHead(404)
+    return res.end()
+  }
 
-  switch (target?.type) {
+  const { type, target } = hosts[req.headers.host]
+
+  switch (type) {
     case "WEB":
       proxy.web(req, res, {
-        target: `http://127.0.0.1:${target.target}`
+        target: `http://127.0.0.1:${target}`
       })
     break
 
     case "WS":
       proxy.ws(req, res.socket, head, {
-        target: `ws://127.0.0.1:${target.target}`
+        target: `ws://127.0.0.1:${target}`
       })
     break
 
     case "REDIRECT":
       res.writeHead(302, {
-        'Location': target.target
+        'Location': target
       })
       res.end()
     break
 
     default:
-      res.writeHead(404)
+      res.writeHead(502)
       res.end()
     break
   }
-}).listen(ports.httpServer, () => console.log(greenBright(`Proxy is running on port ${ports.httpServer}`)))
+}).listen(ports.httpServer, console.log(greenBright(`Proxy is running on port ${ports.httpServer}`)))
