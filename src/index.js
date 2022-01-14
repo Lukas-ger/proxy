@@ -3,14 +3,14 @@ const httpProxy = require('http-proxy')
 const fs = require("fs")
 const { greenBright } = require("chalk")
 const hosts = require("./hosts")
-const { ports } = reuqire("./config")
+const { ports, outTimeout, inTimeout } = reuqire("./config")
 
 if (typeof ports.proxyServer !== "number") throw new TypeError('The proxyServer port needs to be type of "number"')
 if (typeof ports.httpServer !== "number") throw new TypeError('The httpServer port needs to be type of "number"')
 
 const proxy = httpProxy.createProxyServer({
-  proxyTimeout: 30000,
-  timeout: 30000,
+  proxyTimeout: outTimeout,
+  timeout: inTimeout,
   ws: true
 }).listen(ports.proxyServer)
 
