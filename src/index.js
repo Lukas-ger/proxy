@@ -2,14 +2,17 @@ const http = require('http')
 const httpProxy = require('http-proxy')
 const fs = require("fs")
 const { greenBright } = require("chalk")
-const hosts = require("./hosts.json")
-const { allowWebsockets } = reuqire("./config.json")
+const hosts = require("./hosts")
+const { ports } = reuqire("./config")
+
+if (typeof ports.proxyServer !== "number") throw new TypeError('The proxyServer port need to be type of "number"')
+if (typeof ports.httpServer !== "number") throw new TypeError('The httpServer port need to be type of "number"')
 
 const proxy = httpProxy.createProxyServer({
   proxyTimeout: 30000,
   timeout: 30000,
   ws: true
-}).listen(81)
+}).listen(ports.proxyServer)
 
 proxy.on('error', function (err, req, res) {
   res.writeHead(500)
@@ -27,7 +30,7 @@ http.createServer(async function(req, res, head) {
     break
 
     case "WS":
-      if (allowWebsockets) proxy.ws(req, res.socket, head, {
+      proxy.ws(req, res.socket, head, {
         target: `ws://127.0.0.1:${target.target}`
       })
     break
@@ -44,4 +47,4 @@ http.createServer(async function(req, res, head) {
       res.end()
     break
   }
-}).listen(80, () => console.log(greenBright("Running on post 80")))
+}).listen(ports.httpServer, () => console.log(greenBright(`Proxy is running on port ${ports.httpServer}`)))
