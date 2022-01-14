@@ -2,6 +2,8 @@ const http = require('http')
 const httpProxy = require('http-proxy')
 const fs = require("fs")
 const { greenBright } = require("chalk")
+const hosts = require("./hosts.json")
+const { allowWebsockets } = reuqire("./config.json")
 
 const proxy = httpProxy.createProxyServer({
   proxyTimeout: 30000,
@@ -15,7 +17,7 @@ proxy.on('error', function (err, req, res) {
 })
 
 http.createServer(async function(req, res, head) {
-  const target = JSON.parse(fs.readFileSync(`${__dirname}/config.json`, "utf-8"))[req.headers.host]
+  const target = hosts[req.headers.host]
 
   switch (target?.type) {
     case "WEB":
@@ -25,7 +27,7 @@ http.createServer(async function(req, res, head) {
     break
 
     case "WS":
-      proxy.ws(req, res.socket, head, {
+      if (allowWebsockets) proxy.ws(req, res.socket, head, {
         target: `ws://127.0.0.1:${target.target}`
       })
     break
