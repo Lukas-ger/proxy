@@ -10,7 +10,7 @@ if (!pattern.ports.test(ports.proxyServer)) throw new TypeError('The proxyServer
 if (!pattern.ports.test(ports.httpServer)) throw new TypeError('The httpServer port needs to be type of "number"')
 
 // Register handler & start proxy server
-proxy.on('error', onError)
+proxyServer.on('error', onError)
 http.createServer(proxyServer).listen(ports.httpServer, () => {
   console.log(greenBright(`Proxy is running on port ${ports.httpServer}`))
 })
