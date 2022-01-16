@@ -8,7 +8,9 @@ const proxy = httpProxy.createProxyServer({
   ws: true
 }).listen(ports.proxyServer)
 
-module.exports = async (req, res, head) => {
+module.exports = {
+  server: proxy,
+  handler: async (req, res, head) => {
     // Return status code 404 if host is not a registered target
     if (!hosts[req.headers.host]) {
       res.writeHead(404)
@@ -51,3 +53,4 @@ module.exports = async (req, res, head) => {
       break
     }
   }
+}
