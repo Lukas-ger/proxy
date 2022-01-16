@@ -12,5 +12,6 @@ if (!pattern.ports.test(ports.httpServer)) throw new TypeError('The httpServer p
 // Register handler & start proxy server
 server.on('error', onError)
 http.createServer(handler).listen(ports.httpServer, () => {
-  console.log(greenBright(`Proxy is running on port ${ports.httpServer}`))
+  console.log(greenBright(`HTTP is running on port ${ports.httpServer}`))
+  console.log(greenBright(`Proxy is running on port ${ports.proxyServer}`))
 })
