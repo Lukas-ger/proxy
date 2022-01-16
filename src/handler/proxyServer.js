@@ -1,6 +1,6 @@
 const httpProxy = require('http-proxy')
 const hosts = require("../hosts.js")
-const { outTimeout, inTimeout } = require("../config.js")
+const { ports, outTimeout, inTimeout } = require("../config.js")
 
 const proxy = httpProxy.createProxyServer({
   proxyTimeout: outTimeout,
