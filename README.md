@@ -1,4 +1,7 @@
 <h1 align="center">P R O X Y</h1>
+
+__Beta - This version might not work as it's supposed to do__
+
 Basic proxy script using <a href="https://github.com/http-party/node-http-proxy">http-proxy</a>
 
 ## Setup
