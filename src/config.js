@@ -8,4 +8,5 @@ module.exports = {
     },
     outTimeout: 30000, // (in ms) for outgoing proxy requests
     inTimeout: 30000, // (in ms) for incoming requests
+    extendedLogs: true // Log more events than usual/neccessary
 }
