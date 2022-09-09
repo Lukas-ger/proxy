@@ -1,7 +1,7 @@
 const http = require('http')
 const httpProxy = require('http-proxy')
 const { greenBright } = require("chalk")
-const { ports, outTimeout, inTimeout } = require("./config.json")
+const { ports, outTimeout, inTimeout, hosts } = require("./config.json")
 
 const server = httpProxy.createProxyServer({
   proxyTimeout: outTimeout,
@@ -27,22 +27,22 @@ http.createServer(async (req, res, head) => {
 
   switch (type) {
     // HTTP requests
-    case "WEB":
-      proxy.web(req, res, {
+    case 0:
+      server.web(req, res, {
         target: `http://127.0.0.1:${target}`
       })
     break
 
-    case "WS":
+    case 1:
       // WebSocket requests
-      proxy.ws(req, res.socket, head, {
+      server.ws(req, res.socket, head, {
         target: `ws://127.0.0.1:${target}`
       })
     break
 
-    case "REDIRECT":
+    case 2:
       // Redirections
-      res.writeHead(302, {
+      server.writeHead(302, {
         'Location': target
       })
       res.end()

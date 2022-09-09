@@ -1,8 +1,0 @@
-{
-  "ports": {
-    "http_server": 80,
-    "proxy_server": 3001
-  },
-  "outTimeout": 30000,
-  "inTimeout": 30000
-}
