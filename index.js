@@ -26,6 +26,15 @@ http.createServer(async (req, res, head) => {
   // Get details about the registered target
   const { type, target } = hosts[req.headers.host]
 
+  /**
+   * Configuration of targets (config.json)
+   * 
+   * 0 = Basic HTTP request (port as int)
+   * 1 = Websocket request (port as int)
+   * 2 = Redirect (url as string)
+   */
+
+
   switch (type) {
     // HTTP requests
     case 0:
