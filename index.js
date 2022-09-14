@@ -1,17 +1,18 @@
 const http = require('http')
 const httpProxy = require('http-proxy')
 const { greenBright } = require("chalk")
-const { ports, outTimeout, inTimeout, hosts } = require("./config.json")
+const { ports, outTimeout, inTimeout, hosts, response_with_error } = require("./config.json")
 
+// Create the proxy server
 const server = httpProxy.createProxyServer({
   proxyTimeout: outTimeout,
   timeout: inTimeout,
   ws: true
 }).listen(ports.proxy_server)
 
-// Register handler & start proxy server
+// Error occured
 server.on('error', (err, req, res) => {
-  res?.writeHead(500)
+  res?.writeHead(500, response_with_error ? err : undefined)
   res?.end()
 })
 
@@ -42,7 +43,7 @@ http.createServer(async (req, res, head) => {
 
     case 2:
       // Redirections
-      server.writeHead(302, {
+      res.writeHead(302, {
         'Location': target
       })
       res.end()
@@ -50,10 +51,10 @@ http.createServer(async (req, res, head) => {
 
     default:
       /**
-       * Error!
+       * Error
        * Non-existent target type
        */
-      res.writeHead(502)
+      res.writeHead(502, "Non-existent target type")
       res.end()
     break
   }

@@ -1,10 +1,11 @@
 {
   "ports": {
-    "http_server": 3000,
-    "proxy_server": 3001
+    "http_server": 80,
+    "proxy_server": 3000
   },
   "outTimeout": 30000,
   "inTimeout": 30000,
+  "response_with_error": true,
   "hosts": {
     "localhost:3000": {
       "type": 0,
