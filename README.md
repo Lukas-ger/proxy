@@ -1,22 +1,14 @@
 <h1 align="center">P R O X Y</h1>
+<hr/>
+This proxy script supports requests for **HTTP and WS requests**.<br/>
+Incoming requests will be sent to **127.0.0.1** with the configured port or redirected to the given URL.<br/>
+You can configure them in the config.json file.
 
-__Beta - This version might not work as it's supposed to do__
+"type" is the type of the action regarding the incoming request (see below).<br/>
+"target" is either the port (type 0 and 2: int) or the URL (type 1: string).
+<br/>
 
-Basic proxy script using <a href="https://github.com/http-party/node-http-proxy">http-proxy</a>
-
-## Setup
-1. Clone this repository
-2. Adapt the `config.json` to your usage
-3. Run the script
-
-__Inline command example for Linux__:<br>
-`git clone https://github.com/flamexdev/proxy.git && cd proxy && node .`
-
-## Target modification
-To modify or add your own target you need to enter the `config.json` file. The allowed types are...
-0 = Basic HTTP request (target is the port as int)
-1 = Websocket request (target is the port as int)
-2 = Redirect (target is the url as string)
-
-## Any questions left?
-Feel free to open a issue, send me an [E-Mail](mailto:contact@flamex.dev) or a dm on [Discord](https://discord.com/users/681424352599736327)
+**The different types of targets and their meanings are...**<br/>
+0 = HTTP request (port as int)<br/>
+1 = Redirect (url as string)<br/>
+2 = WS request (port as int)
