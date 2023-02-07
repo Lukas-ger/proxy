@@ -34,6 +34,7 @@ const server = httpProxy.createProxyServer({
 
 // Error occured
 server.on('error', (err, req, res) => {
+  console.log("Error\n", err)
   res?.writeHead(500, response_with_error ? err : "Internal Server Error")
   res?.end()
 })
