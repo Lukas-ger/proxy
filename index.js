@@ -21,7 +21,6 @@
 
 const http = require('http')
 const httpProxy = require('http-proxy')
-const { greenBright } = require("chalk")
 const fs = require("fs")
 const path = require("path")
 const { ports, outTimeout, inTimeout, response_with_error, allowWebSockets } = require("./config.json")
@@ -83,6 +82,6 @@ http.createServer(async (req, res, head) => {
     break
   }
 }).listen(ports.http_server, () => {
-  console.log(greenBright(`HTTP server is running on port ${ports.http_server}`))
-  console.log(greenBright(`Proxy server is running on port ${ports.proxy_server}`))
+  console.log(`HTTP server is running on port ${ports.http_server}`)
+  console.log(`Proxy server is running on port ${ports.proxy_server}`)
 })
