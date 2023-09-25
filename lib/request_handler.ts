@@ -1,27 +1,31 @@
-import http, {ClientRequest, IncomingMessage, ServerResponse} from "http";
-import proxy_config, { Config } from "./proxy_config";
+import
+    http, {
+    ClientRequest,
+    IncomingMessage,
+    ServerResponse
+} from "http"
 import mysql from "./mysql"
+import { ProxyRule } from "./classes/database"
 
-export default (
+const { get_proxy_rule } = mysql
+
+export default async (
     req: IncomingMessage,
     res: ServerResponse
-): void => {
-    // Get destination from config
-    const dest: Config | null = proxy_config(req.headers.host)
+): Promise<void> => {
+    const proxy_rule: ProxyRule | undefined = await get_proxy_rule(req.headers.host)
 
     // handle error if destination is not configured
-    if (!dest) {
+    if (!proxy_rule) {
         res.statusCode = 404
         res.end(`Not Found for ${req.headers.host}`)
         return
     }
 
     // Prepare config for proxy request
-    const { dest_hostname, dest_port } = dest
-
     const options = {
-        hostname: dest_hostname,
-        port: dest_port,
+        hostname: proxy_rule.destination?.host,
+        port: proxy_rule.destination?.port,
         path: req.url,
         method: req.method,
         headers: req.headers
@@ -42,7 +46,7 @@ export default (
     })
 
     proxy_req.on("error", (error: Error) => {
-        console.log("\x1b[31m%s\x1b[0m", error)
+        console.error(error)
         res.statusCode = 500
         res.end("Internal Server Error")
     })
