@@ -6,8 +6,9 @@ export class Destination {
 }
 
 export class ProxyRule {
-    destination: Destination | undefined
-    action: number | undefined
+    destination: Destination
+    action: number
+    cache_time: number
 
     constructor(db_entry: RowDataPacket) {
         this.destination = {
@@ -15,5 +16,6 @@ export class ProxyRule {
             port: db_entry.dest_port
         }
         this.action = db_entry.action
+        this.cache_time = db_entry.cache_time
     }
 }

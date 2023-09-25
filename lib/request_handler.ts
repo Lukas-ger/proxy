@@ -13,7 +13,7 @@ export default async (
     req: IncomingMessage,
     res: ServerResponse
 ): Promise<void> => {
-    const proxy_rule: ProxyRule | undefined = await get_proxy_rule(req.headers.host)
+    const proxy_rule: ProxyRule | undefined = await get_proxy_rule(new URL(`http://${req.headers.host}`).hostname)
 
     // handle error if destination is not configured
     if (!proxy_rule) {

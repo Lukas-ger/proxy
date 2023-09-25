@@ -5,6 +5,7 @@ import {
     RowDataPacket
 } from "mysql2";
 import { ProxyRule } from "./database"
+import proxy_cache from "./cache"
 
 export class Mysql {
     connection: Connection | undefined
@@ -42,6 +43,8 @@ export class Mysql {
         req_host: string | undefined
     ): Promise<ProxyRule | undefined> => {
         return new Promise((resolve): void => {
+            if (proxy_cache.resolve(req_host)) return resolve(proxy_cache.resolve(req_host))
+
             this.connection?.query(
                 "SELECT * FROM rules WHERE req_host = ?",
                 req_host,
@@ -50,9 +53,13 @@ export class Mysql {
                     results: RowDataPacket[]
                 ): void => {
                     if (err) throw err
-                    resolve(
-                        results[0] ? new ProxyRule(results[0]) : undefined
-                    )
+                    if (results[0]) {
+                        const result: ProxyRule = new ProxyRule(results[0])
+                        proxy_cache.register(result)
+                        resolve(result)
+                    } else {
+                        resolve(undefined)
+                    }
                 }
             )
         })
