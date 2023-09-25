@@ -106,3 +106,4 @@ dist
 .idea/*
 /Proxy ERM.pdf
 .env
+*.js
