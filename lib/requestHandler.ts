@@ -1,7 +1,11 @@
 import http, {ClientRequest, IncomingMessage, ServerResponse} from "http";
 import proxy_config, { Config } from "./proxy_config";
+import mysql from "./mysql"
 
-export default (req: IncomingMessage, res: ServerResponse): void => {
+export default (
+    req: IncomingMessage,
+    res: ServerResponse
+): void => {
     // Get destination from config
     const dest: Config | null = proxy_config(req.headers.host)
 
