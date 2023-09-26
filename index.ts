@@ -1,8 +1,8 @@
 import http from "http"
 import "dotenv"
 import { config } from "dotenv"
-import request_handler from "./lib/request_handler"
-import mysql from "./lib/mysql";
+import request_handler from "./lib/RequestHandler"
+import mysql from "./lib/MySQL";
 import { QueryError } from "mysql2";
 
 config()

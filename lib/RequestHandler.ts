@@ -2,18 +2,20 @@ import
     http, {
     ClientRequest,
     IncomingMessage,
-    ServerResponse
+    ServerResponse,
+    IncomingHttpHeaders
 } from "http"
-import mysql from "./mysql"
-import { ProxyRule } from "./classes/database"
+import mysql from "./MySQL"
+import { ProxyRule } from "./classes/Database"
+import { RequestOptions } from "./interfaces/RequestOptions"
 
 const { get_proxy_rule } = mysql
 
-export default async (
+const pre_checks = async (
     req: IncomingMessage,
     res: ServerResponse
 ): Promise<void> => {
-    const proxy_rule: ProxyRule | undefined = await get_proxy_rule(new URL(`http://${req.headers.host}`).hostname)
+    const proxy_rule: ProxyRule | undefined = await get_proxy_rule(req.headers.host)
 
     // handle error if destination is not configured
     if (!proxy_rule) {
@@ -22,11 +24,31 @@ export default async (
         return
     }
 
+    if (req.socket.remoteAddress && proxy_rule.blacklist_src.includes(req.socket.remoteAddress)) {
+        res.statusCode = 403
+        res.end("Access denied")
+        return
+    }
+
+    if (!req.method) {
+        res.statusCode = 400
+        res.end("No method provided")
+        return
+    }
+
+    forward_request(req, res, proxy_rule)
+}
+
+const forward_request = (
+    req: IncomingMessage,
+    res: ServerResponse,
+    proxy_rule: ProxyRule
+): void => {
     // Prepare config for proxy request
-    const options = {
+    const options: RequestOptions = {
         hostname: proxy_rule.destination?.host,
         port: proxy_rule.destination?.port,
-        path: req.url,
+        path: req.url || "/",
         method: req.method,
         headers: req.headers
     }
@@ -51,3 +73,5 @@ export default async (
         res.end("Internal Server Error")
     })
 }
+
+export default pre_checks

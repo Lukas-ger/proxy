@@ -1,4 +1,4 @@
-import { ProxyRule } from "./database"
+import { ProxyRule } from "./Database"
 
 class ProxyCache {
     entries: ProxyRule[] = []

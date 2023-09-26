@@ -4,20 +4,20 @@ import {
     QueryError,
     RowDataPacket
 } from "mysql2";
-import { ProxyRule } from "./database"
-import proxy_cache from "./cache"
+import { ProxyRule } from "./Database"
+import proxy_cache from "./Cache"
 
-export class Mysql {
-    connection: Connection | undefined
-    host: string | undefined
-    user: string | undefined
-    database: string | undefined
+export class MySQLConnection {
+    connection: Connection
+    host: string
+    user: string
+    database: string
 
     constructor(
-        host: string | undefined,
-        user: string | undefined,
+        host: string,
+        user: string,
         password: string | undefined,
-        database: string | undefined
+        database: string
     ) {
         this.host = host
         this.user = user
@@ -46,7 +46,7 @@ export class Mysql {
             if (proxy_cache.resolve(req_host)) return resolve(proxy_cache.resolve(req_host))
 
             this.connection?.query(
-                "SELECT * FROM rules WHERE req_host = ?",
+                "SELECT r.*, GROUP_CONCAT(b.ip SEPARATOR ';') AS blacklisted_ips FROM rules r LEFT JOIN blacklist b ON r.req_host = b.req_host WHERE r.req_host = ? GROUP BY r.req_host",
                 req_host,
                 (
                     err: QueryError | null,
