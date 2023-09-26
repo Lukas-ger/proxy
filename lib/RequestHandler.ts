@@ -2,34 +2,37 @@ import
     http, {
     ClientRequest,
     IncomingMessage,
-    ServerResponse,
-    IncomingHttpHeaders
+    ServerResponse
 } from "http"
 import mysql from "./MySQL"
 import { ProxyRule } from "./classes/Database"
-import { RequestOptions } from "./interfaces/RequestOptions"
 
 const { get_proxy_rule } = mysql
 
+/**
+ * Check if the request and be forwarded without conflicts
+ */
 const pre_checks = async (
     req: IncomingMessage,
     res: ServerResponse
 ): Promise<void> => {
     const proxy_rule: ProxyRule | undefined = await get_proxy_rule(req.headers.host)
 
-    // handle error if destination is not configured
+    // No rule for requested destination configured
     if (!proxy_rule) {
         res.statusCode = 404
         res.end(`Not Found for ${req.headers.host}`)
         return
     }
 
+    // IP blacklisted
     if (req.socket.remoteAddress && proxy_rule.blacklist_src.includes(req.socket.remoteAddress)) {
         res.statusCode = 403
         res.end("Access denied")
         return
     }
 
+    // No method provided
     if (!req.method) {
         res.statusCode = 400
         res.end("No method provided")
@@ -38,28 +41,34 @@ const pre_checks = async (
 
     req.headers["Via"] = `${req.httpVersion} InternalProxy`
 
+    // Forward the request to the configured destination
     forward_request(req, res, proxy_rule)
 }
 
+/**
+ * Forward the full and conflict free request to its destination
+ */
 const forward_request = (
     req: IncomingMessage,
     res: ServerResponse,
     proxy_rule: ProxyRule
 ): void => {
-    // Prepare config for proxy request
-    const options: RequestOptions = {
+    const proxy_req: ClientRequest = http.request({
         hostname: proxy_rule.destination?.host,
         port: proxy_rule.destination?.port,
         path: req.url || "/",
         method: req.method,
         headers: req.headers
-    }
+    }, (dest_res: IncomingMessage): void => {
+        if (!dest_res.statusCode) {
+            proxy_req.emit("error", "The destinations responded without a status code")
+            return
+        }
 
-    // Create proxy request
-    const proxy_req: ClientRequest = http.request(options, (proxy_res: IncomingMessage): void => {
-        // Handle proxy response
-        res.writeHead(proxy_res.statusCode || 500, proxy_res.headers)
-        proxy_res.pipe(res, {
+        res.writeHead(dest_res.statusCode, dest_res.headers)
+
+        // Forward the destinations response to the client
+        dest_res.pipe(res, {
             end: true
         })
     })
@@ -69,8 +78,9 @@ const forward_request = (
         end: true
     })
 
-    proxy_req.on("error", (error: Error) => {
-        console.error(error)
+    // Handle request errors
+    proxy_req.on("error", (error: Error): void => {
+        console.error(new Date(), error)
         res.statusCode = 500
         res.end("Internal Server Error")
     })

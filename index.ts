@@ -8,6 +8,9 @@ import { QueryError } from "mysql2";
 config()
 const { PORT } = process.env
 
+/**
+ * Start the proxy server
+ */
 http.createServer(request_handler).listen(PORT, (): void => {
     console.log(`listening on port ${PORT}`)
     mysql.connect()

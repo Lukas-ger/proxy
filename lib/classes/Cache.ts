@@ -3,12 +3,18 @@ import { ProxyRule } from "./Database"
 class ProxyCache {
     entries: ProxyRule[] = []
 
+    /**
+     * Get a proxy rule from the cache that matches the requested host.
+     */
     resolve = (
         req_host: string | undefined
     ): ProxyRule | undefined => {
         return this.entries.find((e: ProxyRule): boolean => e.destination?.host === req_host)
     }
 
+    /**
+     * Register a rule in the cache. Delete it after the configured time in seconds.
+     */
     register = (
         proxy_rule: ProxyRule
     ): void => {
