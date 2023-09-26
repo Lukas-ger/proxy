@@ -61,7 +61,7 @@ const forward_request = (
         headers: req.headers
     }, (dest_res: IncomingMessage): void => {
         if (!dest_res.statusCode) {
-            proxy_req.emit("error", "The destinations responded without a status code")
+            proxy_req.emit("error", "The destination responded without a status code")
             return
         }
 
