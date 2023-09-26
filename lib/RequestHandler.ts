@@ -36,7 +36,7 @@ const pre_checks = async (
         return
     }
 
-    req.headers.via = `${req.httpVersion} InternalProxy`
+    req.headers["Via"] = `${req.httpVersion} InternalProxy`
 
     forward_request(req, res, proxy_rule)
 }
