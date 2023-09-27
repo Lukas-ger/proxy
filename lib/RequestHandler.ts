@@ -6,6 +6,7 @@ import
 } from "http"
 import mysql from "./MySQL"
 import { ProxyRule } from "./classes/ProxyRule"
+import { Log } from "./classes/Log";
 
 const { get_proxy_rule } = mysql
 
@@ -43,6 +44,9 @@ const pre_checks = async (
 
     // Forward the request to the configured destination
     forward_request(req, res, proxy_rule)
+
+    // Log request if enabled
+    if (proxy_rule.logging) new Log(req)
 }
 
 /**

@@ -6,6 +6,7 @@ import {
 } from "mysql2";
 import { ProxyRule } from "./ProxyRule"
 import proxy_cache from "./Cache"
+import { Log } from "./Log"
 
 /**
  * The connection to the MySQL database
@@ -56,7 +57,7 @@ export class MySQLConnection {
             if (proxy_cache.resolve(req_host)) return resolve(proxy_cache.resolve(req_host))
 
             // Get rule from MySQL database
-            this.connection?.query(
+            this.connection.query(
                 "SELECT r.*, GROUP_CONCAT(b.ip SEPARATOR ';') AS blacklisted_ips FROM rules r LEFT JOIN blacklist b ON r.req_host = b.req_host WHERE r.req_host = ? GROUP BY r.req_host",
                 req_host,
                 (
@@ -75,6 +76,21 @@ export class MySQLConnection {
                     }
                 }
             )
+        })
+    }
+
+    insert_log = (
+        log: Log
+    ): void => {
+        this.connection.query("INSERT INTO logs VALUES (?, ?, ?, ?)", [
+            log.requested_host,
+            log.family,
+            log.ip,
+            log.timestamp
+        ], (
+            err: QueryError | null
+        ): void => {
+            if (err) throw err
         })
     }
 }
