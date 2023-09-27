@@ -17,6 +17,13 @@ const pre_checks = async (
     req: IncomingMessage,
     res: ServerResponse
 ): Promise<void> => {
+    // No requested host in headers provided
+    if (!req.headers.host) {
+        res.statusCode = 400
+        res.end("No host in headers")
+        return
+    }
+
     const proxy_rule: ProxyRule | undefined = await get_proxy_rule(req.headers.host)
 
     // No rule for requested destination configured
