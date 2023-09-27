@@ -5,7 +5,7 @@ import
     ServerResponse
 } from "http"
 import mysql from "./MySQL"
-import { ProxyRule } from "./classes/Database"
+import { ProxyRule } from "./classes/ProxyRule"
 
 const { get_proxy_rule } = mysql
 

@@ -4,7 +4,7 @@ import {
     QueryError,
     RowDataPacket
 } from "mysql2";
-import { ProxyRule } from "./Database"
+import { ProxyRule } from "./ProxyRule"
 import proxy_cache from "./Cache"
 
 /**
