@@ -7,9 +7,9 @@ class ProxyCache {
      * Get a proxy rule from the cache that matches the requested host.
      */
     resolve = (
-        req_host: string | undefined
+        req_host: string
     ): ProxyRule | undefined => {
-        return this.entries.find((e: ProxyRule): boolean => e.destination?.host === req_host)
+        return this.entries.find((e: ProxyRule): boolean => e.requested_host === req_host)
     }
 
     /**

@@ -21,6 +21,6 @@ export class ProxyRule {
         this.action = db_entry.action
         this.cache_time = db_entry.cache_time
         this.blacklist_src = db_entry.blacklisted_ips?.split(";") || []
-        this.logging = !!db_entry.logging
+        this.logging = !!db_entry.logging.readInt8()
     }
 }

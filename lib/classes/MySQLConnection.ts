@@ -50,7 +50,7 @@ export class MySQLConnection {
      * Get the rule of the proxy rule either from cache or MySQL database
      */
     get_proxy_rule = async (
-        req_host: string | undefined
+        req_host: string
     ): Promise<ProxyRule | undefined> => {
         return new Promise((resolve): void => {
             // Get rule from cache
