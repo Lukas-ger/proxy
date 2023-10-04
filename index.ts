@@ -1,5 +1,4 @@
 import http from "http"
-import "dotenv"
 import request_handler from "./lib/RequestHandler"
 import mysql from "./lib/MySQL"
 import { QueryError } from "mysql2"
