@@ -5,6 +5,8 @@ import mysql from "./lib/MySQL"
 import { QueryError } from "mysql2"
 const { PORT } = process.env
 
+if (!PORT) throw Error("No port provided")
+
 /**
  * Start the proxy server
  */
