@@ -3,7 +3,7 @@ import {
     createConnection,
     QueryError,
     RowDataPacket
-} from "mysql2";
+} from "mysql2"
 import { ProxyRule } from "./ProxyRule"
 import proxy_cache from "./Cache"
 import { Log } from "./Log"

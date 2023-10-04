@@ -1,5 +1,5 @@
 import mysql from "../MySQL"
-import { IncomingMessage } from "http";
+import { IncomingMessage } from "http"
 
 /**
  * Log object for incoming proxy requests

@@ -1,6 +1,4 @@
-import { MySQLConnection } from "./classes/MySQLConnection";
-import { config } from "dotenv"
-config()
+import { MySQLConnection } from "./classes/MySQLConnection"
 
 if (!process.env.MYSQL_HOST) throw new Error("No host for MySQL connection provided")
 if (!process.env.MYSQL_USER) throw new Error("No user for MySQL connection provided")

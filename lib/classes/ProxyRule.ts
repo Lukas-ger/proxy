@@ -1,4 +1,4 @@
-import { RowDataPacket } from "mysql2";
+import { RowDataPacket } from "mysql2"
 import { Destination } from "../interfaces/Destination"
 
 /**

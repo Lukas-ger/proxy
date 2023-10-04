@@ -6,7 +6,7 @@ import
 } from "http"
 import mysql from "./MySQL"
 import { ProxyRule } from "./classes/ProxyRule"
-import { Log } from "./classes/Log";
+import { Log } from "./classes/Log"
 
 const { get_proxy_rule } = mysql
 
