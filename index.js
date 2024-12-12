@@ -1,5 +1,5 @@
 /**
- * © Flamex 2023 - MIT License (see "LICENSE" file)
+ * © Lukas Horstmann-Hartung 2023 - MIT License (see "LICENSE" file)
  */
 
 /**
